@@ -1,0 +1,28 @@
+service: database-alarms
+provider:
+  name: aws
+  stage: ${opt:stage, 'production'}
+  region: ${env:AWS_REGION, 'us-east-1'}
+  ecr:
+    images:
+      img:
+        path: ./
+        platform: linux/amd64
+
+functions:
+  notifySlack:
+    timeout: 30
+    memorySize: 1024
+    image:
+      name: img
+    environment:
+      SLACK_WEBHOOK_URL: https://hooks.slack.com/services/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
+    events:
+      - cloudwatchEvent:
+          event:
+            source:
+              - "aws.cloudwatch"
+            detail-type:
+              - "CloudWatch Alarm State Change"
+            resources:
+              - "arn:aws:cloudwatch:us-east-1:673648522697:alarm:Production Database Status"
