@@ -14,7 +14,10 @@ def handler(event=None, context=None):
     old_state = event['detail']['previousState']['value']
     reason = event['detail']['state']['reason']
     emoji_state = lambda state: ":white_check_mark:" if state == "OK" else ":x:"
-    slack_users_dev = "<!subteam^S06HBEQB8ES>" # @dev in slack
+    if alarm_name == 'dms-latency-check':
+        slack_users_dev = "<!subteam^S07C17PK5JB>" # @data in slack
+    else:
+        slack_users_dev = "<!subteam^S06HBEQB8ES>" # @dev in slack
 
     slack_message = {
         "blocks": [
